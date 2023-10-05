@@ -8,7 +8,6 @@ const counter = ref(0);
   <main>
     <div class="links">
       <RouterLink active-class="active" to="/">Home</RouterLink>
-      <RouterLink active-class="active" to="/projects">Projects</RouterLink>
       <RouterLink active-class="active" to="/about">About Me</RouterLink>
       <RouterLink active-class="active" to="/contact">Contact</RouterLink>
     </div>
