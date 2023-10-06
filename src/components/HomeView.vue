@@ -1,84 +1,109 @@
-<script setup>
-import foodData from "../data.json"
-import { ref } from "vue"
-import { useRouter } from "vue-router"
-
-const router = useRouter()
-const foods = ref(foodData)
-
-// Define data properties for user input
-const userInput = {
-  name: '',
-  price: ''
-}
-
-// Function to handle form submission
-function handleSubmit() {
-  // Do something with the user input data (e.g., add it to the 'foods' array)
-  const newFood = {
-    id: foods.length + 1, // Generate a new ID
-    name: userInput.name,
-    price: userInput.price
-  }
-
-  foods.value.push(newFood)
-
-  // Clear the input fields
-  userInput.name = ''
-  userInput.price = ''
-}
-</script>
-
 <template>
-  <main class="container">
-    <h1>Menu</h1>
-    <div class="cards">
-      <div v-for="food in foods" :key="food.id" class="card" @click="router.push(`/food/${food.id}`)">
-        <h1>{{ food.name }}</h1>
-        <p>{{ food.price }}</p>
-      </div>
-    </div>
-    
-    <!-- Add a form for user input -->
-    <form @submit.prevent="handleSubmit" class="input-form">
-      <label for="name">Add Pizza:</label>
-      <input type="text" id="name" name="name" v-model="userInput.name" required>
-      
-      <label for="price">Price:</label>
-      <input type="number" id="price" name="price" v-model="userInput.price" required>
-      
-      <button type="submit">Add Food</button>
-    </form>
-  </main>
+  <div>
+    <!-- Section 1: Text Interpolation -->
+    <h2>Template Syntax</h2>
+    <button @click="increment">Count</button>
+    <button @click="decrement">Decrement count</button>
+    <div>{{ count }}</div>
+    <div>{{ arrayOfEmoji }}</div>
+
+    <!-- Section 2: Class and Style Bindings -->
+    <h2>Class and Style Bindings</h2>
+    <div :class="{ active: isActive, 'text-success': count >= 5 }">Class</div>
+    <div :style="{ color: textColor, fontSize: fontSize + 'px' }">Style</div>
+
+    <!-- Section 3: Event Handling -->
+    <h2>Event Handling</h2>
+    <button @click="toggleEmoji">Toggle Emoji</button>
+    <div v-if="showEmoji">{{ arrayOfEmoji }}</div>
+
+    <!-- Section 4: Form Input Bindings -->
+    <h2>Form Input Bindings</h2>
+    <input type="text" v-model="inputText" />
+    <input type="checkbox" v-model="inputCheckbox" />
+    <input type="radio" v-model="radioValue" value="option1" />
+    <select v-model="selectedFruit">
+      <option value="Die">Die</option>
+      <option value="Live">Live</option>
+    </select>
+    <textarea v-model="textareaText"></textarea>
+
+    <!-- Section 6: List Rendering -->
+    <h2>List Rendering</h2>
+    <ul>
+      <li v-for="(item, index) in items" :key="index">{{ item.name }}</li>
+    </ul>
+
+    <!-- Section 7: Event Handling -->
+    <h2>Event Handling</h2>
+    <button class="button" @click="inlineClickHandler">Inline Click</button>
+
+   
+  </div>
 </template>
 
-<style scoped>
-.container {
-  max-width: 960px; /* Limit the maximum width of the container */
-  margin: 0 auto; /* Center the container horizontally */
-  padding: 20px;
-  background-color: #f0f0f0;
-}
+<script>
+import { ref, computed, watch } from 'vue';
 
-.cards {
-  display: flex;
-  flex-wrap: wrap; /* Allow cards to wrap to the next line */
-  margin-top: 20px; /* Increase top margin for spacing */
-  justify-content: space-between; /* Distribute cards evenly with spacing */
-}
+export default {
+  props: {
+    emoji: { type: String, default: '👽' }
+  },
+  setup(props) {
+    // Data properties
+    const count = ref(0);
+    const inputText = ref('');
+    const inputCheckbox = ref(false);
+    const radioValue = ref('option1');
+    const selectedFruit = ref('Die');
+    const textareaText = ref('');
+    const showEmoji = ref(false);
+    const items = ref([]); // Define items if needed
+    const watchedValue = ref(''); // Define watchedValue if needed
 
-.card {
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
-  padding: 15px;
-  width: calc(33.33% - 15px); /* Adjust card width to create a 3-column layout */
-  margin-bottom: 20px;
-  background-color: white;
-  transition: background-color 0.3s;
-}
+    // Computed properties
+    const isActive = computed(() => count.value % 2 === 0);
+    const textColor = computed(() => (count.value < 3 ? 'red' : 'blue'));
+    const fontSize = ref(24);
+    const arrayOfEmoji = computed(() => Array.from(new Array(count.value), () => props.emoji).join(''));
 
-.input-form {
-  margin-top: 20px;
-}
+    // Event handling functions
+    const increment = () => count.value++;
+    const decrement = () => count.value--;
+    const toggleEmoji = () => (showEmoji.value = !showEmoji.value);
+    const inlineClickHandler = () => {
+      // Handle inlineClickHandler if needed
+    };
 
-/* Add other CSS styles as needed */
-</style>
+    // Watchers
+    watch(inputText, (newInputText) => {
+      textareaText.value = newInputText;
+    });
+
+    watch(count, (newCount) => {
+      if (newCount === 5) console.log('You have clicked five times');
+    });
+
+    // Return data and functions
+    return {
+      count,
+      inputText,
+      inputCheckbox,
+      radioValue,
+      selectedFruit,
+      textareaText,
+      showEmoji,
+      arrayOfEmoji,
+      items,
+      watchedValue,
+      increment,
+      decrement,
+      isActive,
+      textColor,
+      fontSize,
+      toggleEmoji,
+      inlineClickHandler
+    };
+  }
+};
+</script>
